@@ -6,10 +6,13 @@ This project is a [_fastlane_](https://github.com/fastlane/fastlane) plugin.
 
 If you aren't setup with fastlane yet, you'll need to get your project setup before proceeding.
 
+
 Run this command to install the plugin.
 ```bash
 bundle exec fastlane add_plugin fd_runway
 ```
+
+For now, this plugin is only available through fanduel-oss github. Select Git URL Paste the ssh address: git@github.com:fanduel-oss/fastlane-runway.git The plugin should install automatically. If not, you can run bundle install to do it manually. Distribution through rubygems is pending FanDuel review.
 
 Add a lane in your Fastfile for using the plugin.
 ```bash
