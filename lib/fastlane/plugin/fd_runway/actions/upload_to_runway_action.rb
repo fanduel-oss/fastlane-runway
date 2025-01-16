@@ -36,7 +36,7 @@ module Fastlane
           UI.success("Successfully uploaded to Runway!")
         else
           UI.error("Failed to upload: #{response.body}")
-          raise "Failed to upload to Runway - upload failed"
+          raise "Failed to upload to Runway - upload failed. Error: #{response.body}"
         end
       end
 
