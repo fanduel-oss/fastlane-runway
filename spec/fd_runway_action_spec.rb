@@ -28,7 +28,7 @@ describe Fastlane::Actions::UploadToRunwayAction do
       allow(Fastlane::Helper::FdRunwayHelper).to receive(:upload_file).and_return(double(success?: false, body: 'error'))
       expect do
         Fastlane::Actions::UploadToRunwayAction.run({ api_key: 'api_key', app_id: 'app_id', bucket_id: 'bucket_id', file_path: 'file_path' })
-      end.to raise_error("Failed to upload to Runway - upload failed")
+      end.to raise_error("Failed to upload to Runway - upload failed. Error: error")
     end
 
     it 'prints a success message if the upload is successful' do
