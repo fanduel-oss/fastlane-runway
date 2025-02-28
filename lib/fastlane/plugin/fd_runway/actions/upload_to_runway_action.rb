@@ -12,6 +12,12 @@ module Fastlane
         if !ci_build_info.nil? && ci_build_info[:status].nil?
           new_ci_build_info[:status] = 'success'
         end
+        if !ci_build_info.nil? && ci_build_info[:commit_url].nil?
+          new_ci_build_info[:commit_url] || ""
+        end
+        if !ci_build_info.nil? && ci_build_info[:url].nil?
+          new_ci_build_info[:url] || ""
+        end
         new_ci_build_info
       end
 
@@ -21,8 +27,6 @@ module Fastlane
         bucket_id = params[:bucket_id]
         file_path = params[:file_path]
         tester_notes = params[:tester_notes]
-        commit_url = params[:commit_url] || ""
-        url = params[:url] || ""
         ci_build_info = self.populate_ci_build_info_with_defaults(params[:ci_build_info])
 
         UI.user_error!("API Key is missing") unless api_key
