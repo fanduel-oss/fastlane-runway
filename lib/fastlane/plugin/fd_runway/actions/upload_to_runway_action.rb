@@ -13,10 +13,10 @@ module Fastlane
           new_ci_build_info[:status] = 'success'
         end
         if !ci_build_info.nil? && ci_build_info[:commit_url].nil?
-          new_ci_build_info[:commit_url] || ""
+          new_ci_build_info[:commit_url] = ""
         end
         if !ci_build_info.nil? && ci_build_info[:url].nil?
-          new_ci_build_info[:url] || ""
+          new_ci_build_info[:url] = ""
         end
         new_ci_build_info
       end
