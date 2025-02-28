@@ -30,6 +30,8 @@ Add a lane in your Fastfile for using the plugin.
             branch: "main",
             integrationId: "azure-ci",
             commitHash: "1111111150d07ff3d2467e33aa118622909111111",
+            commitUrl: "www.url-to-commit/xx",
+            url: "www.url-to-build-integration",
             workflowData: {
               workflowId: "7",
               workflowName: "Main-CI"

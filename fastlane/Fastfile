@@ -29,6 +29,8 @@ lane :runway_test do
           branch: 'branch',
           integrationId: 'azure-ci',
           commitHash: 'commit_hash',
+          commitUrl: 'commit_url',
+          url: 'url',
           workflowData: {
             workflowId: 'workflow_id',
             workflowName: 'workflow_name'

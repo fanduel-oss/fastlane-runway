@@ -21,6 +21,8 @@ module Fastlane
         bucket_id = params[:bucket_id]
         file_path = params[:file_path]
         tester_notes = params[:tester_notes]
+        commit_url = params[:commit_url] || ""
+        url = params[:url] || ""
         ci_build_info = self.populate_ci_build_info_with_defaults(params[:ci_build_info])
 
         UI.user_error!("API Key is missing") unless api_key
@@ -119,6 +121,8 @@ module Fastlane
                 branch: "main",
                 integrationId: "azure-ci",
                 commitHash: "1111111150d07ff3d2467e33aa118622909111111",
+                commitUrl: "www.url-to-commit/xx",
+                url: "www.url-to-build-integration",
                 workflowData: {
                   workflowId: "7",
                   workflowName: "Main-CI"
