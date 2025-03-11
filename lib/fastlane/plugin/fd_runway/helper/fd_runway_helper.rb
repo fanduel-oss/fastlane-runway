@@ -18,10 +18,20 @@ module Fastlane
           end
         end.to_json
 
-        connection.post do |req|
+        response = connection.post do |req|
           req.headers['X-API-KEY'] = api_key
+          req.headers['Content-Type'] = 'multipart/form-data'
           req.body = payload
         end
+
+        begin
+          response_data = JSON.parse(response.body)
+        rescue JSON::ParserError
+          response_data = {}
+        end
+
+        response_data['success'] = response.status.between?(200, 299)
+        response_data
       end
     end
   end
