@@ -31,6 +31,7 @@ module Fastlane
         end
 
         response_data['success'] = response.status.between?(200, 299)
+        response_data['status'] = response.status
         response_data
       end
     end
