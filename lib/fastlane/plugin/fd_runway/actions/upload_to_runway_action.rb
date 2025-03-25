@@ -15,28 +15,58 @@ module Fastlane
         new_ci_build_info
       end
 
-      def self.run(params)
+      def self.extract_download_url(raw_download_url)
+        return nil unless raw_download_url
+
+        if raw_download_url.include?("/api/org/")
+          match = raw_download_url.match(%r{/api/org/(?<org_id>[^/]+)/app/(?<app_id>[^/]+)/build-distribution/build/(?<build_id>[^/]+)/download\?bucketId=(?<bucket_id>[^&]+)})
+          return "https://app.runway.team/dashboard/org/#{match[:org_id]}/app/#{match[:app_id]}/builds?buildId=#{match[:build_id]}&bucketId=#{match[:bucket_id]}" if match
+        end
+        return raw_download_url
+      end
+
+      def self.validate_params(params)
         api_key = params[:api_key]
         app_id = params[:app_id]
         bucket_id = params[:bucket_id]
         file_path = params[:file_path]
         tester_notes = params[:tester_notes]
-        ci_build_info = self.populate_ci_build_info_with_defaults(params[:ci_build_info])
+        ci_build_info = populate_ci_build_info_with_defaults(params[:ci_build_info])
 
         UI.user_error!("API Key is missing") unless api_key
         UI.user_error!("App ID is missing") unless app_id
         UI.user_error!("Bucket ID is missing") unless bucket_id
         UI.user_error!("File path is missing") unless file_path
 
-        upload_url = "https://upload-api.runway.team/v1/app/#{app_id}/bucket/#{bucket_id}/build"
+        return [api_key, app_id, bucket_id, file_path, tester_notes, ci_build_info]
+      end
+
+      def self.build_upload_url(app_id, bucket_id)
+        return "https://upload-api.runway.team/v1/app/#{app_id}/bucket/#{bucket_id}/build"
+      end
+
+      def self.handle_response(response)
+        if response.fetch('success', false)
+          UI.success("✅ Successfully uploaded to Runway!")
+          download_url = extract_download_url(response["downloadUrl"])
+          UI.message("📥 Download URL: #{download_url}") if download_url
+        else
+          error_message = response["error"] || "Unknown error"
+          UI.error("🚨 Upload failed: #{response['status']}: #{error_message}")
+          raise "Failed to upload to Runway - upload failed. #{response['status']}: #{error_message}"
+        end
+
+        return response.merge("downloadUrl" => download_url)
+      end
+
+      def self.run(params)
+        api_key, app_id, bucket_id, file_path, tester_notes, ci_build_info = validate_params(params)
+
+        upload_url = build_upload_url(app_id, bucket_id)
 
         response = Helper::FdRunwayHelper.upload_file(upload_url, api_key, file_path, tester_notes, ci_build_info)
 
-        if response.success?
-          UI.success("Successfully uploaded to Runway!")
-        else
-          raise "Failed to upload to Runway - upload failed. #{response.status}: #{response.body}"
-        end
+        return handle_response(response)
       end
 
       def self.is_supported?(platform)
