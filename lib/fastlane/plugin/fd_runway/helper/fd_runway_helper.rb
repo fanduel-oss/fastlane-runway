@@ -32,6 +32,15 @@ module Fastlane
 
         response_data['success'] = response.status.between?(200, 299)
         response_data['status'] = response.status
+
+        unless response_data['success']
+          if response_data['message']
+            response_data['error'] = response_data['message']
+          elsif !response_data['error']
+            response_data['error'] = response.body.to_s.strip.empty? ? "HTTP Error: #{response.status}" : response.body.to_s
+          end
+        end
+
         response_data
       end
     end

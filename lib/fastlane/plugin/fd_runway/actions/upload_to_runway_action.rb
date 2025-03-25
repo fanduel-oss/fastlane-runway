@@ -52,8 +52,8 @@ module Fastlane
           UI.message("📥 Download URL: #{download_url}") if download_url
         else
           error_message = response["error"] || "Unknown error"
-          UI.error("🚨 Upload failed: #{error_message}")
-          raise "Runway upload failed! Response: #{response.inspect}"
+          UI.error("🚨 Upload failed: #{response['status']}: #{error_message}")
+          raise "Failed to upload to Runway - upload failed. #{response['status']}: #{error_message}"
         end
 
         return response.merge("downloadUrl" => download_url)

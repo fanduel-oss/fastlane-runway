@@ -25,10 +25,10 @@ describe Fastlane::Actions::UploadToRunwayAction do
     end
 
     it 'raises an error if the upload fails' do
-      allow(Fastlane::Helper::FdRunwayHelper).to receive(:upload_file).and_return({ "success" => false, "error" => "Upload failed" })
+      allow(Fastlane::Helper::FdRunwayHelper).to receive(:upload_file).and_return({ "success" => false, "status" => 400, "error" => "Upload failed" })
       expect do
         Fastlane::Actions::UploadToRunwayAction.run({ api_key: 'api_key', app_id: 'app_id', bucket_id: 'bucket_id', file_path: 'file_path' })
-      end.to raise_error("Runway upload failed! Response: {\"success\"=>false, \"error\"=>\"Upload failed\"}")
+      end.to raise_error("Failed to upload to Runway - upload failed. 400: Upload failed")
     end
 
     it 'prints a success message if the upload is successful' do
